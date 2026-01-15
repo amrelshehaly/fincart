@@ -1,0 +1,97 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum WebhookSource {
+  MERCHANT
+  COURIER
+}
+
+enum ShipmentStatus {
+  CREATED
+  READY
+  DISPATCHED
+  IN_TRANSIT
+  DELIVERED
+  FAILED
+}
+
+model Order {
+  id         String         @id @default(uuid())
+  name       String
+  address    String
+  merchantId String
+  merchant   Merchant       @relation(fields: [merchantId], references: [id])
+  shipments  Shipment?
+  events     WebhookEvent[]
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+}
+
+model Merchant {
+  id        String     @id @default(uuid())
+  name      String
+  orders    Order[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  shipments Shipment[]
+}
+
+model Courier {
+  id        String     @id @default(uuid())
+  name      String
+  shipments Shipment[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Shipment {
+  id                String             @id @default(uuid())
+  trackingNumber    String
+  merchantId        String
+  merchant          Merchant           @relation(fields: [merchantId], references: [id])
+  courierId         String
+  courier           Courier            @relation(fields: [courierId], references: [id])
+  orderId           String             @unique
+  order             Order              @relation(fields: [orderId], references: [id])
+  status            ShipmentStatus
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  shipmentFinancial ShipmentFinancial?
+}
+
+model WebhookEvent {
+  id             String        @id @default(uuid())
+  source         WebhookSource
+  eventType      String
+  idempotencyKey String
+  orderId        String
+  order          Order         @relation(fields: [orderId], references: [id])
+  createdAt      DateTime      @default(now())
+
+  @@unique([source, idempotencyKey])
+}
+
+model ShipmentFinancial {
+  id         String   @id @default(uuid())
+  shipmentId String   @unique
+  shipment   Shipment @relation(fields: [shipmentId], references: [id])
+
+  shippingFee Int
+  currency    String @default("EGP")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
