@@ -126,22 +126,22 @@ The test will:
 ```
 fincart/
 ├── apps/
-│   ├── api/              # NestJS backend
+│   ├── api/              
 │   │   ├── src/
-│   │   │   ├── webhooks/    # Webhook controllers
-│   │   │   ├── queue/       # BullMQ processors
-│   │   │   ├── orders/      # Order service
-│   │   │   └── prisma/      # Database client
+│   │   │   ├── webhooks/    
+│   │   │   ├── queue/       
+│   │   │   ├── orders/      
+│   │   │   └── prisma/      
 │   │   └── prisma/
-│   │       ├── schema.prisma  # Database schema
-│   │       └── seed.ts        # Test data
-│   └── client/           # React frontend
+│   │       ├── schema.prisma  
+│   │       └── seed.ts        
+│   └── client/           
 │       └── src/
-│           ├── App.tsx          # Main dashboard
-│           ├── components/      # OrderCard component
-│           └── services/        # API client
-├── docker-compose.yml    # PostgreSQL + Redis
-└── README.md            # This file
+│           ├── App.tsx          
+│           ├── components/      
+│           └── services/      
+├── docker-compose.yml    
+└── README.md            
 ```
 
 ## How It Works
@@ -183,7 +183,6 @@ When you edit an order address:
 **Frontend not loading**
 - Make sure both backend and frontend are running
 - Check the terminal for any errors
-- Try clearing your browser cache
 
 ## API Endpoints
 
@@ -195,14 +194,6 @@ When you edit an order address:
 - `GET /api/orders/with-shipments` - Get all orders with shipment details
 - `PATCH /api/orders/:id` - Update an order (used by frontend)
 
-## What's Not Implemented (Yet)
-
-- Bidirectional sync (updating Shopify when we change an order)
-- System design diagram (intentionally left for manual creation)
-- More comprehensive error handling
-- Webhook signature verification
-- Production-ready logging
-
 ## Files Overview
 
 - `README.md` - This file, full documentation
@@ -212,14 +203,3 @@ When you edit an order address:
 - `apps/api/get-test-ids.js` - Helper to get merchant/courier IDs
 - `docker-compose.yml` - PostgreSQL and Redis setup
 
-## Notes
-
-This was built as a demo for handling high-volume order processing. In production, you'd want to add:
-- Proper authentication
-- Webhook signature verification
-- More detailed logging
-- Monitoring and alerts
-- Better error recovery
-- Actual Shopify API integration
-
-The code is intentionally kept simple and readable for demonstration purposes.
