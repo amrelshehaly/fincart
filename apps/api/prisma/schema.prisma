@@ -20,12 +20,15 @@ enum WebhookSource {
 }
 
 enum ShipmentStatus {
-  CREATED
-  READY
-  DISPATCHED
-  IN_TRANSIT
-  DELIVERED
-  FAILED
+  READY      
+  IN_TRANSIT 
+  DELIVERED 
+  FAILED     
+}
+
+enum WebhookEventType {
+  ORDER_FULFILLED  
+  ORDER_UPDATED  
 }
 
 model Order {
@@ -75,7 +78,7 @@ model Shipment {
 model WebhookEvent {
   id             String        @id @default(uuid())
   source         WebhookSource
-  eventType      String
+  eventType      WebhookEventType
   idempotencyKey String
   orderId        String
   order          Order         @relation(fields: [orderId], references: [id])

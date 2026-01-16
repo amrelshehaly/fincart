@@ -24,11 +24,14 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@nestjs/bullmq": "^11.0.4",
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^6.19.2",
+    "bullmq": "^5.66.5",
+    "ioredis": "^5.9.2",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },

@@ -6,6 +6,7 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from 'generated/prisma/client';
 import { Order } from '@prisma/client';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class OrdersService {
@@ -58,6 +59,62 @@ export class OrdersService {
   async findMany(): Promise<Order[]> {
     try {
       const orders = await this.prisma.client.order.findMany();
+      return orders;
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException('Failed to find orders');
+    }
+  }
+
+  async upsertOrder(orderData: Prisma.OrderCreateInput): Promise<Order> {
+    try {
+      const orderId = orderData.id || uuidv4();
+
+      const existing = await this.prisma.client.order.findUnique({
+        where: { id: orderId },
+      });
+
+      if (existing) {
+        return await this.prisma.client.order.update({
+          where: { id: orderId },
+          data: {
+            name: orderData.name,
+            address: orderData.address,
+          },
+        });
+      }
+
+      return await this.prisma.client.order.create({
+        data: {
+          ...orderData,
+          id: orderId,
+        },
+        include: {
+          shipments: true,
+        },
+      });
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException('Failed to upsert order');
+    }
+  }
+
+  async findManyWithShipments(): Promise<Order[]> {
+    try {
+      const orders = await this.prisma.client.order.findMany({
+        include: {
+          shipments: {
+            include: {
+              shipmentFinancial: true,
+              courier: true,
+            },
+          },
+          merchant: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
       return orders;
     } catch (error: unknown) {
       console.error(error);

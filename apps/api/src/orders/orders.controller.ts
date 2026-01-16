@@ -25,4 +25,9 @@ export class OrdersController {
   getAllOrders(): Promise<Order[]> {
     return this.ordersService.findMany();
   }
+
+  @Get('with-shipments')
+  getOrdersWithShipments(): Promise<Order[]> {
+    return this.ordersService.findManyWithShipments();
+  }
 }
