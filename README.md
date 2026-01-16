@@ -170,19 +170,6 @@ When you edit an order address:
 3. If changed, shows a dialog with both versions
 4. You choose which one to keep
 
-## Common Issues
-
-**"Foreign key constraint violated"**
-- Make sure you're using a valid merchant ID from the seed data
-- Run `npx prisma db seed` to create test merchants
-
-**"Connection refused" on port 5432 or 6379**
-- Make sure Docker is running: `docker-compose up -d`
-- Check containers are running: `docker ps`
-
-**Frontend not loading**
-- Make sure both backend and frontend are running
-- Check the terminal for any errors
 
 ## API Endpoints
 
