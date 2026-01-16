@@ -10,7 +10,7 @@ export default defineConfig({
         target: 'http://localhost:3000',
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+        // Keep /api in the path - backend expects /api/orders/with-shipments
       },
     },
   },

@@ -121,4 +121,23 @@ export class OrdersService {
       throw new InternalServerErrorException('Failed to find orders');
     }
   }
+
+  async updateOrder(
+    id: string,
+    updateData: { address?: string; name?: string },
+  ): Promise<Order> {
+    try {
+      const order = await this.prisma.client.order.update({
+        where: { id },
+        data: {
+          ...(updateData.address && { address: updateData.address }),
+          ...(updateData.name && { name: updateData.name }),
+        },
+      });
+      return order;
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException('Failed to update order');
+    }
+  }
 }

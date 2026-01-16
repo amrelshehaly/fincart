@@ -18,6 +18,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:chaos": "node test-chaos.js",
+    "get-ids": "node get-test-ids.js",
     "seed": "tsx prisma/seed.ts"
   },
   "prisma": {
@@ -32,6 +34,7 @@
     "@prisma/client": "^6.19.2",
     "bullmq": "^5.66.5",
     "ioredis": "^5.9.2",
+    "node-fetch": "^2.7.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },
