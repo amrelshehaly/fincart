@@ -7,10 +7,14 @@ import {
 } from '@nestjs/common';
 import { WebhookEventType } from '@prisma/client';
 import { QueueService } from 'src/queue/queue.service';
+import { CouriersService } from 'src/couriers/couriers.service';
 
 @Controller('webhooks')
 export class WebhooksController {
-  constructor(private readonly queueService: QueueService) {}
+  constructor(
+    private readonly queueService: QueueService,
+    private readonly couriersService: CouriersService,
+  ) {}
   @Post('shopify')
   webhookShopify(
     @Body() body: any,
@@ -44,7 +48,7 @@ export class WebhooksController {
   }
 
   @Post('courier')
-  webhookCourier(
+  async webhookCourier(
     @Body() body: any,
     @Headers() headers: Record<string, string>,
   ) {
@@ -61,14 +65,15 @@ export class WebhooksController {
       throw new BadRequestException('idempotencyKey is required');
     }
 
-    return this.queueService.addCourierJob({
-      orderId: body.orderId,
-      statusData: {
+    await this.couriersService.updateShipmentStatus(
+      {
         status: body.status,
         shippingFee: body.shippingFee,
       },
-      idempotencyKey: idempotencyKey,
-      eventTimestamp: body.eventTimestamp,
-    });
+      body.orderId,
+      idempotencyKey,
+    );
+
+    return { success: true };
   }
 }
